@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}
+New Chart
+
+
+{% endblock %}
+
+
+
+{% block jsdocs %}
+
+<script src="{{ url_for('static', filename = 'assets/echarts/echarts.js') }}"></script>
+{% endblock %}
+
+
+
+
+{% block body %}
+
+
+<main>
+
+  <body>
+    <!-- preparing a DOM with width and height for ECharts -->
+    <div id="main" style="width: 600px;height:400px;"></div>
+
+    <button type="button" id='order_switch' class="btn btn-light">Light</button>
+  </body>
+
+
+  <script>
+
+    var new_data_order
+    var order_cond
+
+    $('#order_switch').click(function () {
+      current_data_order = myChart._api.getOption().series[0].data
+
+      console.log(current_data_order);
+      console.log(new_data_order);
+
+      new_data_order =  order_cond == true?
+        _.sortBy(myChart._api.getOption().series[0].data, ['x_rad']) :
+        _.sortBy(myChart._api.getOption().series[0].data, ['value'])
+
+      new_opts = myChart._api.getOption()
+      new_opts.series[0].data = new_data_order
+
+      myChart.setOption(new_opts);
+
+      order_cond=!order_cond
+    })
+
+    var myChart = echarts.init(document.getElementById('main'));
+    option = {
+      legend: {
+        orient: "vertical",
+        left: "left",
+        data: ["Apple", "Grapes", "Pineapples", "Oranges", "Bananas"]
+      },
+      tooltip: {
+        trigger: 'item',
+        formatter: function (pr) {
+          return `Series: ${pr.seriesName}<br/> Total Purchase: ${pr.value} &#8378 (%${pr.percent}) <br/> Vendor: ${pr.name} <br/> Quality: ${pr.data.x_rad ? "%" + 100 * pr.data.x_rad : "No Data"} `
+        }
+      },
+      roseType: 'asdasd',
+
+      series: [{
+        type: "pie",
+        name: 'asdasd example',
+        data: [{
+          value: 335,
+          name: "Apple",
+          x_rad: 0.1
+        }, {
+          value: 310,
+          name: "Grapes",
+          x_rad: 0.2
+        }, {
+          value: 234,
+          name: "Pineapples",
+          x_rad: 1
+        }, {
+          value: 135,
+          name: "Oranges",
+
+        }, {
+          value: 750,
+          name: "Bananas",
+          x_rad: 0.2
+        }],
+        clockwise: false
+      }]
+
+    }
+
+    myChart.setOption(option);
+
+
+  </script>
+</main>
+
+
+
+{% endblock %}
